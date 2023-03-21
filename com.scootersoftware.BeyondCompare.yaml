@@ -1,0 +1,96 @@
+# com.scootersoftware.BeyondCompare.yaml
+app-id: com.scootersoftware.BeyondCompare
+runtime: org.freedesktop.Platform
+runtime-version: '22.08'
+sdk: org.freedesktop.Sdk
+command: bcompare
+tags: [proprietary]
+separate-locales: false
+finish-args:
+    # X11 + XShm access
+  - --share=ipc
+  - --socket=x11
+    # Notification access
+  - --talk-name=org.freedesktop.Notifications
+    # System Tray Icon
+  - --talk-name=com.kde.StatusNotifierWatcher
+    # Used for comparing againt a network share
+  - --share=network
+    # Required to being comparing documents in users' home directory
+  - --filesystem=home
+modules:
+  - name: bcompare
+    buildsystem: simple
+    build-commands:
+      - |
+        # Install scripts
+        install -Dm 755 apply_extra --target-directory ${FLATPAK_DEST}/bin/
+        install -Dm 755 bcompare --target-directory ${FLATPAK_DEST}/bin/
+
+        # Install Desktop, MetaInfo, and MIME
+        install -Dm 644 ${FLATPAK_ID}.desktop --target-directory ${FLATPAK_DEST}/share/applications/
+        install -Dm 644 ${FLATPAK_ID}.metainfo.xml --target-directory ${FLATPAK_DEST}/share/metainfo/
+        install -Dm 644 ${FLATPAK_ID}.mime.xml --target-directory ${FLATPAK_DEST}/share/mime/packages/
+
+        # Install icons
+        install -Dm 644 ${FLATPAK_ID}.png --target-directory ${FLATPAK_DEST}/share/icons/hicolor/512x512/apps/
+    sources:
+      - type: script
+        dest-filename: bcompare
+        commands:
+          - exec /app/extra/beyondcompare/bcompare
+      - type: extra-data
+        filename: bcompare.deb
+        only-arches: [x86_64]
+        url: https://www.scootersoftware.com/bcompare-4.4.6.27483_amd64.deb
+        sha256: d7e7ff01fc89f19f34591e1cb352438d3aae4d1d6618050e776eef9e249e0349
+        size: 20609066
+      - type: script
+        dest-filename: apply_extra
+        commands:
+          - |
+            # =====$(pwd)=====`/app/extra`=====
+            # Env from `build-options` does not carry over, define vars again
+            FLATPAK_ID=com.scootersoftware.BeyondCompare
+
+            # Extract upstream package
+            mkdir -p deb-package export/{bin,share/{pixmaps,mime}}
+
+            bsdtar -xvf bcompare.deb
+            tar -xzf data.tar -C deb-package
+
+            # Set up KDE Plasmma 5 service menus
+            mkdir -p $(pwd)/lib/x86_64-linux-gnu/qt5/plugins/kf5/kfileitemaction
+
+            # Set up KDE4 service menus
+            mkdir -p $(pwd)/lib/kde4
+            mkdir -p $(pwd)/share/kde4/services
+
+            # Set up Gnome service menus
+            mkdir -p $(pwd)/lib/nautilus/extensions-3.0
+            mkdir -p $(pwd)/lib/nemo/extensions-3.0
+            mkdir -p $(pwd)/lib/caja/extensions-3.0
+
+            # Set up Xfce service menus
+            mkdir -p $(pwd)/lib/thunarx-2
+            mkdir -p $(pwd)/lib/thunarx-3
+
+            # Install icons
+            mv deb-package/usr/share/pixmaps export/share
+
+            # Rename all icons accordingly
+            rename bcompare ${FLATPAK_ID} export/share/icons/pixmaps/
+
+            # Install the app
+            mv deb-package/usr/bin ./
+
+            # Cleanup
+            rm -rf data.tar debian-binary deb-package bcompare.deb
+      - type: file
+        path: icons/com.scootersoftware.BeyondCompare.png
+      - type: file
+        path: com.scootersoftware.BeyondCompare.desktop
+      - type: file
+        path: com.scootersoftware.BeyondCompare.metainfo.xml
+      - type: file
+        path: com.scootersoftware.BeyondCompare.mime.xml

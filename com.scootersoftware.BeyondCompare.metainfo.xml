@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.scootersoftware.BeyondCompare</id>
+  <name>Beyond Compare</name>
+  <summary>Beyond Compare: Compare, sync, and merge files and folders</summary>
+  <description>
+    <p>
+      Beyond Compare allows you to quickly and easily compare your files and folders.
+      By using simple, powerful commands you can focus on the differences you're interested in and ignore those you're not.
+      You can then merge the changes, synchronize your files, and generate reports for your records.
+    </p>
+    <p>
+      You can compare entire drives and folders at high speed, checking just sizes and modified times.
+    </p>
+    <p>
+      Beyond Compare's merge view allows you to combine changes from two versions of a file or folder into a single output.
+    </p>
+    <p>
+      Beyond Compare's intuitive Folder Sync interface lets you reconcile differences in your data automatically.
+    </p>
+    <p>
+      Feature List: https://www.scootersoftware.com/features.php?zz=features_list
+    </p>
+    <p>
+      NOTE: This wrapper is not verified by, affiliated with, or supported by Scooter Software, Inc
+    </p>
+    <p>
+      KNOWN ISSUES:
+      - N/A
+    </p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://www.scootersoftware.com/images/FolderCompare2.jpg</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.scootersoftware.com/images/TextCompare2.jpg</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.scootersoftware.com/images/FolderMerge.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.scootersoftware.com/images/TextMerge.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.scootersoftware.com/images/FolderSync2.jpg</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.scootersoftware.com/images/blurb_platforms.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.scootersoftware.com/images/blurb_zip.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.scootersoftware.com/images/blurb_ftp.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.scootersoftware.com/images/blurb_media.png</image>
+    </screenshot>
+        <screenshot>
+      <image>https://www.scootersoftware.com/images/blurb_subversion.png</image>
+    </screenshot>
+    </screenshot>
+        <screenshot>
+      <image>https://www.scootersoftware.com/images/blurb_cloud.png</image>
+    </screenshot>
+  </screenshots>
+  <launchable type="desktop-id">com.scootersoftware.BeyondCompare.desktop</launchable>
+  <categories>
+    <category>Utility</category>
+  </categories>
+  <developer_name>Scooter Software Inc.</developer_name>
+  <update_contact>@Shobuprime</update_contact>
+  <url type="homepage">https://www.scootersoftware.com/</url>
+  <url type="bugtracker">https://forum.scootersoftware.com/</url>
+  <url type="help">https://www.scootersoftware.com/index.php?zz=contact</url>
+  <project_group>
+    <group>Beyond Compare</group>
+  </project_group>
+  <releases>
+    <release version="4.4.6" release="27483" date="2023-03-06"/>
+  </releases>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-proprietary=https://www.scootersoftware.com/index.php?zz=legal</project_license>
+  <content_rating type="oars-1.1"/>
+</component>
