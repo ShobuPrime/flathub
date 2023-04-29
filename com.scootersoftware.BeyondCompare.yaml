@@ -38,13 +38,19 @@ modules:
       - type: script
         dest-filename: bcompare
         commands:
-          - exec /app/extra/beyondcompare/bcompare
+          - exec /app/extra/bin/bcompare "$@"
       - type: extra-data
         filename: bcompare.deb
         only-arches: [x86_64]
         url: https://www.scootersoftware.com/bcompare-4.4.6.27483_amd64.deb
         sha256: d7e7ff01fc89f19f34591e1cb352438d3aae4d1d6618050e776eef9e249e0349
         size: 20609066
+      - type: extra-data
+        filename: bzip2.pkg.tar.zst
+        only-arches: [x86_64]
+        url: https://archive.archlinux.org/packages/b/bzip2/bzip2-1.0.8-5-x86_64.pkg.tar.zst
+        sha256: 4dbc8d27868674b9a3718774630be8b234beecbce16ee957239b2cb5a2e73b9f
+        size: 59771
       - type: script
         dest-filename: apply_extra
         commands:
@@ -54,38 +60,36 @@ modules:
             FLATPAK_ID=com.scootersoftware.BeyondCompare
 
             # Extract upstream package
-            mkdir -p deb-package export/{bin,share/{pixmaps,mime}}
+            mkdir -p {bin,deb-package,lib} export/share/pixmaps
 
             bsdtar -xvf bcompare.deb
-            tar -xzf data.tar -C deb-package
-
-            # Set up KDE Plasmma 5 service menus
-            mkdir -p $(pwd)/lib/x86_64-linux-gnu/qt5/plugins/kf5/kfileitemaction
-
-            # Set up KDE4 service menus
-            mkdir -p $(pwd)/lib/kde4
-            mkdir -p $(pwd)/share/kde4/services
-
-            # Set up Gnome service menus
-            mkdir -p $(pwd)/lib/nautilus/extensions-3.0
-            mkdir -p $(pwd)/lib/nemo/extensions-3.0
-            mkdir -p $(pwd)/lib/caja/extensions-3.0
-
-            # Set up Xfce service menus
-            mkdir -p $(pwd)/lib/thunarx-2
-            mkdir -p $(pwd)/lib/thunarx-3
+            tar -xzf data.tar.gz -C deb-package
 
             # Install icons
             mv deb-package/usr/share/pixmaps export/share
 
             # Rename all icons accordingly
-            rename bcompare ${FLATPAK_ID} export/share/icons/pixmaps/
+            rename bcompare ${FLATPAK_ID} export/share/pixmaps/
 
             # Install the app
-            mv deb-package/usr/bin ./
+            mv deb-package/usr/bin .
+            sed -i 's#BC_LIB=/usr/lib/beyondcompare#BC_LIB=/app/extra/lib/beyondcompare#' bin/bcompare
+            mv deb-package/usr/lib .
+
+            # To-do: Fix context menus
+            # lib/bcompare/kde_context_menu
+            # Source new version of this file from GH repo and replace existing one
+            # In essence, need to share desktop files from within the Flatpak, rather than using the native script to place items in home directory ourside of Flatpak
+
+            # Install missing dependency
+            unzstd bzip2.pkg.tar.zst
+            mkdir bzip2
+            tar -xvf bzip2.pkg.tar -C bzip2
+            cp bzip2/usr/lib/* lib/beyondcompare
+            ls -la lib/beyondcompare
 
             # Cleanup
-            rm -rf data.tar debian-binary deb-package bcompare.deb
+            rm -rf control.tar.gz data.tar.gz debian-binary deb-package bcompare.deb
       - type: file
         path: icons/com.scootersoftware.BeyondCompare.png
       - type: file

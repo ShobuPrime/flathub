@@ -7,6 +7,6 @@ TryExec=bcompare
 Comment=Compare, sync, and merge files and folders
 Terminal=false
 Categories=Qt;Development;
-Icon=bcompare
+Icon=com.scootersoftware.BeyondCompare
 Type=Application
 MimeType=application/beyond.compare.snapshot;
