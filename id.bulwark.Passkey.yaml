@@ -49,6 +49,12 @@ modules:
         url: https://jdikcjgzpiezpacsqlkf.supabase.co/storage/v1/object/public/bulwark-passkey-app/bulwark-passkey.deb
         sha256: b3a5e693cf62247cdefa7a026d777143d975d75ed8584607010d33a60a0b96e6
         size: 5374506
+      - type: extra-data
+        filename: webkit2gtk.pkg.tar.zst
+        only-arches: [x86_64]
+        url: https://archive.archlinux.org/packages/w/webkit2gtk-4.1/webkit2gtk-4.1-2.42.1-1-x86_64.pkg.tar.zst
+        sha256: b8ef0563f134911482e9e8524e01ccd9116965112ad3bdbcf89abff722050c13
+        size: 28630180
       - type: script
         dest-filename: apply_extra
         commands:
@@ -62,14 +68,22 @@ modules:
             mkdir -p deb-package export/{bin,share/{icons,mime}}
 
             bsdtar -xvf ${FILENAME}.deb
-            tar -xzf data.tar.gz -C deb-package
+            zstd -d data.tar.zst
+            tar -xvf data.tar.gz -C deb-package
 
             # Install the app
             mv deb-package/usr/bin ./
 
             # Cleanup
             rm -rf control.tar.* data.tar.* debian-binary deb-package ${FILENAME}.deb
+            ls -la
+
+            # Install missing dependency
+            unzstd webkit2gtk.pkg.tar.zst
+            mkdir webkit2gtk
+            tar -xvf webkit2gtk.pkg.tar -C webkit2gtk
+            ls -la webkit2gtk
       - type: file
-        path: icons/id.bulwark.Passkey.svg
+        path: icons/id.bulwark.BulwarkPasskey.svg
       - type: file
-        path: id.bulwark.Passkey.desktop
+        path: id.bulwark.BulwarkPasskey.desktop
