@@ -1,0 +1,75 @@
+# id.bulwark.Passkey
+app-id: id.bulwark.Passkey
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: bulwark_passkey
+tags: [proprietary]
+separate-locales: false
+finish-args:
+    # X11 + XShm access
+  - --share=ipc
+  - --socket=x11
+    # Notification access
+  - --talk-name=org.freedesktop.Notifications
+    # System Tray Icon
+  - --talk-name=com.kde.StatusNotifierWatcher
+    # Secret Service
+  - --own-name=org.freedesktop.secrets
+    # Favicon download
+  - --share=network
+    # Required to save vaults in default location <$HOME/Documents>
+  - --filesystem=xdg-documents
+modules:
+  - name: bulwark_passkey
+    buildsystem: simple
+    build-commands:
+      - |
+        FILENAME=bulwark_passkey
+
+        # Install scripts
+        install -Dm 755 apply_extra --target-directory ${FLATPAK_DEST}/bin/
+        install -Dm 755 ${FILENAME} --target-directory ${FLATPAK_DEST}/bin/
+
+        # Install Desktop, MetaInfo, and MIME
+        install -Dm 644 ${FLATPAK_ID}.desktop --target-directory ${FLATPAK_DEST}/share/applications/
+        # install -Dm 644 ${FLATPAK_ID}.metainfo.xml --target-directory ${FLATPAK_DEST}/share/metainfo/
+        # install -Dm 644 ${FLATPAK_ID}.mime.xml --target-directory ${FLATPAK_DEST}/share/mime/packages/
+
+        # Install icons
+        install -Dm 644 ${FLATPAK_ID}.svg --target-directory ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/
+    sources:
+      - type: script
+        dest-filename: bulwark_passkey
+        commands:
+          - exec /app/extra/bulwark_passkey
+      - type: extra-data
+        filename: bulwark_passkey.deb
+        only-arches: [x86_64]
+        url: https://jdikcjgzpiezpacsqlkf.supabase.co/storage/v1/object/public/bulwark-passkey-app/bulwark-passkey.deb
+        sha256: b3a5e693cf62247cdefa7a026d777143d975d75ed8584607010d33a60a0b96e6
+        size: 5374506
+      - type: script
+        dest-filename: apply_extra
+        commands:
+          - |
+            # =====$(pwd)=====`/app/extra`=====
+            # Env from `build-options` does not carry over, define vars again
+            FLATPAK_ID=id.bulwark.Passkey
+            FILENAME=bulwark_passkey
+
+            # Extract upstream package
+            mkdir -p deb-package export/{bin,share/{icons,mime}}
+
+            bsdtar -xvf ${FILENAME}.deb
+            tar -xzf data.tar.gz -C deb-package
+
+            # Install the app
+            mv deb-package/usr/bin ./
+
+            # Cleanup
+            rm -rf control.tar.* data.tar.* debian-binary deb-package ${FILENAME}.deb
+      - type: file
+        path: icons/id.bulwark.Passkey.svg
+      - type: file
+        path: id.bulwark.Passkey.desktop

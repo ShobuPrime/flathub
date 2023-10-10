@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Bulwark Passkey
+GenericName=Bulwark Passkey
+Comment=Virtual FIDO Device
+Icon=id.bulwark.Passkey
+Terminal=false
+Exec=bulwark_passkey %U
+Categories=Utility
+X-MultipleArgs=false
