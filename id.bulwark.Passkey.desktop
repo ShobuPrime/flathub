@@ -4,8 +4,9 @@ Type=Application
 Name=Bulwark Passkey
 GenericName=Bulwark Passkey
 Comment=Virtual FIDO Device
-Icon=id.bulwark.Passkey
+Icon=id.bulwark.BulwarkPasskey
 Terminal=false
 Exec=bulwark_passkey %U
 Categories=Utility
 X-MultipleArgs=false
+
